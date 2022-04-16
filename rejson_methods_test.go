@@ -3,18 +3,19 @@ package rejonson
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-redis/redis"
-	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"os"
 	"sort"
 	"testing"
 	"time"
+
+	"github.com/go-redis/redis"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
 	redisHost     = "localhost:6379"
-	redisPassword = ""
+	redisPassword = "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81"
 )
 
 var (
@@ -85,6 +86,10 @@ func randStringRunes(n int) string {
 }
 
 func TestMain(m *testing.M) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		return
+	}
 	getBaseJsonTestObject()
 	rand.Seed(time.Now().UnixNano())
 	if v, ok := os.LookupEnv("REJONSON_REDIS_HOST"); ok {
@@ -116,6 +121,10 @@ func TestMain(m *testing.M) {
 }
 
 func TestRedisProcessor_JsonDel(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	originalJs := getBaseJsonTestObject()
 
 	key := concatKey(randStringRunes(32))
@@ -137,6 +146,10 @@ func TestRedisProcessor_JsonDel(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonGet(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	originalJS := getBaseJsonTestObject()
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
@@ -161,6 +174,10 @@ func TestRedisProcessor_JsonGet(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonSet(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -171,6 +188,10 @@ func TestRedisProcessor_JsonSet(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonMGet(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	originalJS := getBaseJsonTestObject()
 	keyA := concatKey(randStringRunes(32))
 	keyB := concatKey(randStringRunes(32))
@@ -199,6 +220,10 @@ func TestRedisProcessor_JsonMGet(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonType(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -218,6 +243,10 @@ func TestRedisProcessor_JsonType(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonNumIncrBy(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -233,6 +262,10 @@ func TestRedisProcessor_JsonNumIncrBy(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonNumMultBy(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -247,6 +280,10 @@ func TestRedisProcessor_JsonNumMultBy(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonStrAppend(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -262,6 +299,10 @@ func TestRedisProcessor_JsonStrAppend(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonStrLen(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -276,6 +317,10 @@ func TestRedisProcessor_JsonStrLen(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonArrAppend(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -290,6 +335,10 @@ func TestRedisProcessor_JsonArrAppend(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonArrIndex(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -320,6 +369,10 @@ func TestRedisProcessor_JsonArrIndex(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonArrInsert(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -334,6 +387,10 @@ func TestRedisProcessor_JsonArrInsert(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonArrLen(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -348,6 +405,10 @@ func TestRedisProcessor_JsonArrLen(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonArrPop(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -362,6 +423,10 @@ func TestRedisProcessor_JsonArrPop(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonArrTrim(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
 
@@ -385,6 +450,10 @@ func TestRedisProcessor_JsonArrTrim(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonObjKeys(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	originalJS := getBaseJsonTestObject()
 	keys := make([]string, 0, len(originalJS))
 	for k := range originalJS {
@@ -407,6 +476,10 @@ func TestRedisProcessor_JsonObjKeys(t *testing.T) {
 }
 
 func TestRedisProcessor_JsonObjLen(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	originalJS := getBaseJsonTestObject()
 	key := concatKey(randStringRunes(32))
 	defer client.Del(key)
@@ -422,6 +495,10 @@ func TestRedisProcessor_JsonObjLen(t *testing.T) {
 }
 
 func TestClient_Pipeline(t *testing.T) {
+	appEnv := os.Getenv("APPLICATION_ENVIRONMENT")
+	if appEnv != "Development" {
+		t.Skip("skipping redis tests")
+	}
 	allKeys := make([]string, 0)
 	pipeline := client.Pipeline()
 

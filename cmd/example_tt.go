@@ -1,19 +1,23 @@
-package rejonson_test
+package main
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/KromDaniel/rejonson"
-	"github.com/go-redis/redis"
 	"time"
+
+	"github.com/fluffy-bunny/rejonson/v8"
+	"github.com/go-redis/redis"
 )
 
-func init() {
+func main() {
 	goRedisClient := redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 	})
 	goRedisClient.Del("go-redis-cmd", "rejson-cmd", "rejson-cmd-pipeline", "go-redis-pipeline-command")
 	_ = goRedisClient.Close()
+
+	ExampleExtendClient()
+	ExampleExtendPipeline()
 }
 
 func ExampleExtendClient() {
