@@ -1,19 +1,20 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/fluffy-bunny/rejonson/v8"
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 )
 
 func main() {
 	goRedisClient := redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 	})
-	goRedisClient.Del("go-redis-cmd", "rejson-cmd", "rejson-cmd-pipeline", "go-redis-pipeline-command")
+	goRedisClient.Del(context.Background(), "go-redis-cmd", "rejson-cmd", "rejson-cmd-pipeline", "go-redis-pipeline-command")
 	_ = goRedisClient.Close()
 
 	ExampleExtendClient()
@@ -34,11 +35,11 @@ func ExampleExtendClient() {
 		// handle
 	}
 	// redis "native" command
-	client.Set("go-redis-cmd", "hello", time.Second)
-	client.JsonSet("rejson-cmd", ".", string(js))
+	client.Set(context.Background(), "go-redis-cmd", "hello", time.Second)
+	client.JsonSet(context.Background(), "rejson-cmd", ".", string(js))
 
 	// int command
-	arrLen, err := client.JsonArrLen("rejson-cmd", ".").Result()
+	arrLen, err := client.JsonArrLen(context.Background(), "rejson-cmd", ".").Result()
 	if err != nil {
 		// handle
 	}
@@ -55,15 +56,15 @@ func ExampleExtendPipeline() {
 	client := rejonson.ExtendClient(goRedisClient)
 
 	pipeline := client.Pipeline()
-	pipeline.JsonSet("rejson-cmd-pipeline", ".", "[10]")
-	pipeline.JsonNumMultBy("rejson-cmd-pipeline", "[0]", 10)
-	pipeline.Set("go-redis-pipeline-command", "hello from go-redis", time.Second)
+	pipeline.JsonSet(context.Background(), "rejson-cmd-pipeline", ".", "[10]")
+	pipeline.JsonNumMultBy(context.Background(), "rejson-cmd-pipeline", "[0]", 10)
+	pipeline.Set(context.Background(), "go-redis-pipeline-command", "hello from go-redis", time.Second)
 
-	_, err := pipeline.Exec()
+	_, err := pipeline.Exec(context.Background())
 	if err != nil {
 		// handle error
 	}
-	jsonString, err := client.JsonGet("rejson-cmd-pipeline").Result()
+	jsonString, err := client.JsonGet(context.Background(), "rejson-cmd-pipeline").Result()
 	if err != nil {
 		// handle error
 	}
