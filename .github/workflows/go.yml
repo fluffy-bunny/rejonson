@@ -40,6 +40,8 @@ jobs:
        echo new_tag: ${{needs.pre_flight.outputs.new_tag}} 
        echo changelog: ${{needs.pre_flight.outputs.changelog}}
 
+    - uses: actions/checkout@v3
+
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
@@ -50,7 +52,7 @@ jobs:
 
     - name: Test
       run: go test -v ./...
-      
+
   release:
     needs: [pre_flight,build]
     runs-on: ubuntu-latest
